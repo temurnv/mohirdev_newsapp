@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView, UpdateView, DeleteView, CreateView
 
 # Create your views here.
 
@@ -16,9 +17,9 @@ def news_list(request):
     return render(request, 'news/news_list.html', context)
 
 def news_detail(request, news):
-    news = get_object_or_404(News, slug=news, status=News.Status.Published)
+    # news = get_object_or_404(News, slug=news, status=News.Status.Published)
     context = {
-        'news': news,
+        'news': get_object_or_404(News, slug=news, status=News.Status.Published),
     }
 
     return render(request, 'news/news_detail.html', context)
@@ -102,27 +103,45 @@ class XorijNewsView(ListView):
     template_name = 'news/xorij.html'
     context_object_name = 'xorijiy_yangiliklar'
 
+
     def get_queryset(self):
-        def get_queryset(self):
-            news = self.model.published.all().filter(category__name="Xorijiy")
-            return news
+        news = self.model.published.all().filter(category__name="Xorijiy")
+        return news
 
 class SportNewsView(ListView):
     model = News
     template_name = 'news/sport.html'
     context_object_name = 'sport_yangiliklar'
 
+
     def get_queryset(self):
-        def get_queryset(self):
-            news = self.model.published.all().filter(category__name="Sport")
-            return news
+        news = self.model.published.all().filter(category__name="Sport")
+        return news
 
 class TechNewsView(ListView):
     model = News
     template_name = 'news/tech.html'
     context_object_name = 'texno_yangiliklar'
 
+
     def get_queryset(self):
-        def get_queryset(self):
-            news = self.model.published.all().filter(category__name="Texnologiya")
-            return news
+        news = self.model.published.all().filter(category__name="Texnologiya")
+        return news
+
+
+
+class NewsUpdateView(UpdateView):
+    model = News
+    fields = ('title', 'body', 'image', 'category', 'status', )
+    template_name = 'crud/news_edit.html'
+
+
+class NewsDeleteView(DeleteView):
+    model = News
+    template_name = 'crud/news_delete.html'
+    success_url = reverse_lazy('home_page')
+
+class NewsCreateView(CreateView):
+    model = News
+    template_name = 'crud/news_create.html'
+    fields = ('title', 'slug', 'body', 'image', 'category', 'status')

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'news/base.html' %}
 
 {% load static %}
 
@@ -11,5 +11,11 @@
     <h5> {{ news.publish_time }} </h5>
     <img src="{{ news.image.url }}">
     <p> {{ news.body }} </p>
+
+<div class="card-footer text-center">
+    <a href="{% url 'news_update' news.slug %}">Tahrirlash</a> |
+    <a href="{% url 'news_delete' news.slug %}">O'chirish</a>
+
+</div>
 
 {% endblock content %}
